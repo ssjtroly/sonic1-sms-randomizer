@@ -35,7 +35,8 @@ var ui = {
 		this.seedInput.value = "";
 		this.fileInput.value = "";
 
-		this.shuffleLevelsSpoilersCheck.disabled = !this.shuffleLevelsCheck.checked;
+		this.shuffleLevelsSpoilersCheck.disabled = true;
+		//this.shuffleLevelsSpoilersCheck.disabled = !this.shuffleLevelsCheck.checked;
 		this.shuffleBonusCheck.disabled = !this.shuffleLevelsCheck.checked;
 	},
 };
