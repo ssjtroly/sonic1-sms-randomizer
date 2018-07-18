@@ -13,8 +13,17 @@ var randomizer = {
 		var isShuffleLevelsChecked = ui.shuffleLevelsCheck.checked;
 		var isShuffleBonusChecked = ui.shuffleBonusCheck.checked;
 		var isShuffleSfxChecked = ui.shuffleSfxCheck.checked;
+		var isShuffleMusicChecked = ui.shuffleMusicCheck.checked;
+		var isShufflePaletteColorsChecked = ui.shufflePaletteColorsCheck.checked;
+		var isShufflePalettesChecked = ui.shufflePalettesCheck.checked;
 
-		if (!isShuffleLevelsChecked && !isShuffleSfxChecked) {
+		if (!isShuffleLevelsChecked && 
+			!isShuffleBonusChecked && 
+			!isShuffleSfxChecked && 
+			!isShuffleMusicChecked &&
+			!isShufflePaletteColorsChecked &&
+			!isShufflePalettesChecked) 
+		{
 			alert("Nothing to randomize.");
 			return;
 		}
@@ -25,14 +34,26 @@ var randomizer = {
 		
 		if (isShuffleLevelsChecked) {
 			randomizer.shuffleLevels(ROM);
-			
-			if (isShuffleBonusChecked) {
-				randomizer.shuffleBonuses(ROM);
-			}
+		}
+
+		if (isShuffleBonusChecked) {
+			randomizer.shuffleBonuses(ROM);
 		}
 
 		if (isShuffleSfxChecked) {
 			randomizer.shuffleSfx(ROM);
+		}
+
+		if (isShuffleMusicChecked) {
+			randomizer.shuffleMusic(ROM);
+		}
+
+		if (isShufflePaletteColorsChecked) {
+			randomizer.shufflePaletteColors(ROM);
+		}
+
+		if (isShufflePalettesChecked) {
+			randomizer.shufflePalettes(ROM);
 		}
 
 		downloadBlob(
@@ -46,6 +67,7 @@ var randomizer = {
 
 	shuffleLevels: function(ROM) {
 		var romData = ROM.slice(0);
+
 		var levelPointerPool = rom.levelHeaderPointers.slice(0);
 		var levelPointers = rom.levelHeaderPointers;
 
@@ -63,6 +85,7 @@ var randomizer = {
 
 	shuffleBonuses: function(ROM) {
 		var romData = ROM.slice(0);
+
 		var bonusPointerPool = rom.bonusHeaderPointers.slice(0);
 		var bonusPointers = rom.bonusHeaderPointers;
 
@@ -80,6 +103,7 @@ var randomizer = {
 
 	shuffleSfx: function(ROM) {
 		var romData = ROM.slice(0);
+
 		var sfxPointerPool = rom.sfxPointers.slice(0);
 		var sfxPointers = rom.sfxPointers;
 
@@ -93,5 +117,77 @@ var randomizer = {
 			var second = sfxPointerPool.slice(poolIndex+1);
 			sfxPointerPool = first.concat(second);
 		}
+	},
+
+	shuffleMusic: function(ROM) {
+		var romData = ROM.slice(0);
+
+		var musicPointerPool = rom.musicPointers.slice(0);
+		var musicPointers = rom.musicPointers;
+
+		for (var i = 0; i < musicPointers.length; i++) {
+			var poolIndex = getRandomInt(musicPointerPool.length);
+
+			ROM[musicPointers[i]] = romData[musicPointerPool[poolIndex]];
+			ROM[musicPointers[i]+1] = romData[musicPointerPool[poolIndex]+1];
+
+			var first = musicPointerPool.slice(0, poolIndex);
+			var second = musicPointerPool.slice(poolIndex+1);
+			musicPointerPool = first.concat(second);
+		}
+
+		var musicDataPointer = rom.musicDataPointers;
+		var musicDataPointers = [];
+
+		// assuming first 14 pointers are for background music (since there are only 14 songs) 
+		// shuffling all 21 pointers causes graphics bugs
+		for (var i = 0; i < 14; i++) {
+			var offset = musicDataPointer+(i*2);
+			musicDataPointers.push([romData[offset], romData[offset+1]]);
+		}
+		var musicDataPointersPool = musicDataPointers.slice(0);
+
+		for (var i = 0; i < musicDataPointers.length; i++) {
+			var offset = musicDataPointer+(i*2);
+			var poolIndex = getRandomInt(musicDataPointersPool.length);
+
+			ROM[offset] = musicDataPointersPool[poolIndex][0];
+			ROM[offset+1] = musicDataPointersPool[poolIndex][1];
+
+			var first = musicDataPointersPool.slice(0, poolIndex);
+			var second = musicDataPointersPool.slice(poolIndex+1);
+			musicDataPointersPool = first.concat(second);
+		}
+	},
+
+	shufflePaletteColors: function(ROM) {
+		var romData = ROM.slice(0);
+		var palettePointers = rom.palettePointers;
+
+		for (var i = 0; i < palettePointers.length; i++) {
+			var paletteAddr = palettePointers[i][0];
+			var paletteLen = palettePointers[i][1];
+
+			var colorPool = [];
+			for (var j = 0; j < paletteLen; j++) {
+				var color = romData[paletteAddr+j];
+				//console.log("color: " + color);
+				colorPool.push(color);
+			}
+
+			for (var j = 0; j < paletteLen; j++) {
+				var poolIndex = getRandomInt(colorPool.length);
+
+				ROM[paletteAddr+j] = colorPool[poolIndex];
+
+				var first = colorPool.slice(0, poolIndex);
+				var second = colorPool.slice(poolIndex+1);
+				colorPool = first.concat(second);
+			}
+		}
+	},
+
+	shufflePalettes: function(ROM) {
+		var romData = ROM.slice(0);
 	},
 }

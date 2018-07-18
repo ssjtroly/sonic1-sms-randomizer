@@ -6,6 +6,9 @@ var ui = {
 	shuffleLevelsCheck: null,
 	shuffleBonusCheck: null,
 	shuffleSfxCheck: null,
+	shuffleMusicCheck: null,
+	shufflePaletteColorsCheck: null,
+	shufflePalettesCheck: null,
 	majorVersionDiv: null,
 	minorVersionDiv: null,
 
@@ -23,6 +26,9 @@ var ui = {
 		this.shuffleLevelsCheck = document.getElementById("shuffle-levels-input");
 		this.shuffleBonusCheck = document.getElementById("shuffle-bonus-input");
 		this.shuffleSfxCheck = document.getElementById("shuffle-sfx-input");
+		this.shuffleMusicCheck = document.getElementById("shuffle-music-input");
+		this.shufflePaletteColorsCheck = document.getElementById("shuffle-palette-colors-input");
+		this.shufflePalettesCheck = document.getElementById("shuffle-palettes-input");
 		this.seedRandomButton = document.getElementById("seed-generate");
 		this.fileInput = document.getElementById("file");
 		this.randomizeButton = document.getElementById("randomize-rom");
@@ -30,10 +36,7 @@ var ui = {
 		this.majorVersionDiv.innerHTML = this.majorVersion;
 		this.minorVersionDiv.innerHTML = this.minorVersion;
 
-		this.seedInput.value = "";
+		//this.seedInput.value = "";
 		this.fileInput.value = "";
-
-		this.shuffleBonusCheck.disabled = !this.shuffleLevelsCheck.checked;
-		this.shuffleSfxCheck.checked = false;
 	},
 };

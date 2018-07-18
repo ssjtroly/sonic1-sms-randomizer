@@ -1,6 +1,104 @@
 var rom = {
 	file: null,
 
+	// doesnt appear to be useful since palettes have different sizes
+	// assuming simply shuffling pointers would cause bugs
+	levelPalettesPointer: 0x0627C, // 34 bytes
+
+	// [address, length]
+	palettePointers: [
+		[0x0024B, 64], // Labyrinth underwater
+		[0x00F0E, 32], // Main map
+		[0x00F2E, 32], // Main map 2
+		[0x013E1, 32], // Title Screen
+		[0x014FC, 32], // Game over
+		[0x01B8D, 32], // Level Complete
+		[0x01F9D, 16], // Sky Base 1 Lightning
+		[0x02AD6, 32], // Credits 
+		[0x0626C, 16], // End post
+		[0x0629E, 32], // Green hill load
+		[0x062BE, 48], // Green Hill auto
+		[0x062EE, 32], // Bridge load
+		[0x0630E, 48], // Bridge auto
+		[0x0633E, 32], // Jungle load
+		[0x0635E, 48], // Jungle auto
+		[0x0638E, 32], // Labyrinth load
+		[0x063AE, 48], // Labyrinth auto
+		[0x063DE, 32], // Scrap Brain load
+		[0x063FE, 64], // Scrap Brain auto
+		[0x0643E, 32], // Sky Base load
+		[0x0645E, 64], // Sky Base auto
+		[0x0649E, 64], // Sky Base lightning charge auto
+		[0x064DE, 64], // Sky Base lightning fire auto
+		[0x0651E, 64], // Sky Base 2 auto
+		[0x0655E, 32], // Bonus load
+		[0x0657E, 16], // Bonus auto
+		[0x0658E, 32], // Sky Base 3/Inside load
+		[0x065AE, 64], // Sky Base 3/Inside auto
+		[0x0731C, 16], // Boss sprite
+	],
+
+	palette16Pointers: [
+		0x01F9D, // Sky Base 1 Lightning
+		0x0626C, // End post
+		0x0657E, // Bonus auto
+		0x0731C, // Boss sprite
+	],
+
+	palette32Pointers: [
+		0x00F0E, // Main map
+		0x00F2E, // Main map 2
+		0x013E1, // Title Screen
+		0x014FC, // Game over
+		0x01B8D, // Level Complete
+		0x02AD6, // Credits 
+		0x0629E, // Green hill load
+		0x062EE, // Bridge load
+		0x0633E, // Jungle load
+		0x0638E, // Labyrinth load
+		0x063DE, // Scrap Brain load
+		0x0643E, // Sky Base load
+		0x0655E, // Bonus load
+		0x0658E, // Sky Base 3/Inside load
+	],
+
+	palette48Pointers: [
+		0x062BE, // Green Hill auto
+		0x0630E, // Bridge auto
+		0x0635E, // Jungle auto
+		0x063AE, // Labyrinth auto
+	],
+
+	palette64Pointers: [
+		0x0024B, // Labyrinth underwater
+		0x063FE, // Scrap Brain auto
+		0x0645E, // Sky Base auto
+		0x0649E, // Sky Base lightning charge auto
+		0x064DE, // Sky Base lightning fire auto
+		0x0651E, // Sky Base 2 auto
+		0x065AE, // Sky Base 3/Inside auto
+	],
+
+	musicPointers: [
+		0x00D3D, // Main Map Music
+		0x012D9, // Title Screen Music
+		0x02709, // Credits Music
+		0x03641, // Death Music
+		0x05042, // Death Drowned Music
+		0x05D24, // Invincibility Music
+		0x05EDC, // Chaos Emerald Gained Music
+		0x05FCF, // Level Completed (post) Music
+		0x07045, // Green Hill Boss Music
+		0x07487, // Level Completed (machine) music
+		0x08088, // Jungle Boss Music
+		0x084D4, // Bridge Boss Music
+		0x092A9, // Labyrinth Boss Music
+		0x0A82A, // Scrap Brain Boss Music
+		0x0B68D, // Sky Base Boss Music
+	],
+
+	musicDataPointers: 0x0C716, // 42 bytes
+
 	sfxPointers: [
 		0x014C1, // continue
 		0x017D8, // Chaos Emerald tally
@@ -60,10 +158,8 @@ var rom = {
 		0x0A9B4, // Robotnik platform rise (scrap brain)
 		0x0AC1A, // Exploder (sky base 2)
 		0x0B631, // Turret shooting (sky base)
-		//0x0B7CB, // Hits before glass breaks
 		0x0B7E3, // Glass break
 		0x0B81A, // Glass hit
-		//0x0BC2F, // Hits before lightning wall change
 		0x0BC56, // Continuous Lightning wall 1 (sky base 3)
 		0x0BCA2, // Lightning wall 2 (sky base 3)
 		0x0BE5A, // Teleport out (ending)

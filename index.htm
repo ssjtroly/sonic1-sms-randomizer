@@ -20,10 +20,14 @@
 	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
 	<br>
 	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
-	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
-	<input type="checkbox" id="shuffle-sfx-input"/>&nbspRandomize SFX (potentially buggy)<br>
+	<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
+	<input type="checkbox" id="shuffle-sfx-input"/>&nbspShuffle Sound Effects<br>
+	<input type="checkbox" id="shuffle-music-input"/>&nbspShuffle Music<br>
+	<input type="checkbox" id="shuffle-palettes-input"/>&nbspShuffle Palettes<br>
+	<input type="checkbox" id="shuffle-palette-colors-input" unchecked/>&nbspShuffle Palette Colors (<b><i><u>WARNING: EPILEPSY INDUCING!</u></i></b>)<br>
 	<br>
-	<input type="button" id="randomize-rom" value="Generate"/>
+	<input type="button" id="randomize-rom" value="Generate"/><br>
+	<div style="display: inline;"><br>Thanks to <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog">RomHacking.net</a> for the data they <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog:ROM_map">display</a> from the external links.</div>
 </body>
 
 <script src="ui.js"></script>
@@ -52,10 +56,6 @@ function onRandomSeed() {
 	ui.seedInput.value = getRandomInt(0x7FFFFFFF).toString(10);
 }
 
-function onShuffleLevelsChanged() {
-	ui.shuffleBonusCheck.disabled = !ui.shuffleLevelsCheck.checked;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
 	//console.log("DOM fully loaded and parsed");
 
@@ -64,10 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	ui.seedRandomButton.addEventListener("click", onRandomSeed);
 	ui.fileInput.addEventListener("change", onFileSelect, false);
-	ui.shuffleLevelsCheck.addEventListener("change", onShuffleLevelsChanged);
 	ui.randomizeButton.addEventListener("click", randomizer.onRandomize);
-	
-	// initialize rom
 });
 </script>
 </html>
