@@ -1,4 +1,5 @@
-# sonic1-sms
+# sonic1-sms-randomizer
+
 This is for Sonic the Hedgehog on Sega Master System.
 
 You can find online at https://ssjtroly.neocities.org/sonic1-sms/index.htm
