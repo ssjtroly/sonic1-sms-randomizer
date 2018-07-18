@@ -1,0 +1,75 @@
+<html>
+<head><title>Sonic the Hedgehog Randomizer</title>
+<script src="randomizer.js"></script>
+<script src="seedrandom.min.js"></script>
+<script src="utility.js"></script>
+<script src="download.js"></script>
+<script src="rom.js"></script>
+<script src="randomizer.js"></script>
+
+</head>
+<body>
+	<h1><u>Sonic the Hedgehog Randomizer v<div id="major-version" style="display:inline"></div>.<div id="minor-version" style="display:inline"></div></u></h1>
+	This is for Sonic the Hedgehog on <b><i>Sega Master System</i></b>.<br>
+	Tested ROM checksum:<br>
+		&nbsp&nbsp&nbsp&nbsp<i>CRC32</i>: B519E833<br>
+		&nbsp&nbsp&nbsp&nbsp<i>MD5</i>: DC13A61EAFE75C13C15B5ECE419AC57B<br>
+		&nbsp&nbsp&nbsp&nbsp<i>SHA256</i>: 6AD738965ECE231427EE046B9905CFEE470D5C01220AFDD934DA4673E4A2458B<br>
+	<br>
+	Seed: <input type="text" id="seed-input" /><input type="button" id="seed-generate" value="Random"/><br>
+	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
+	<br>
+	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
+	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-level-spoiler-input"/>&nbspShow Shuffled Level Spoiler<br>
+	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
+	<!--<input type="checkbox" id="shuffle-sfx-input" checked/>&nbspRandomize SFX<br>-->
+	<br>
+	<input type="button" id="randomize-rom" value="Generate"/>
+</body>
+
+<script src="ui.js"></script>
+<script>
+function onFileSelect(evt) {
+	var fileList = evt.target.files;
+
+	if (fileList.length > 0) {
+		ui.selectedFileOutput = fileList[0].name;
+		var lastDot = ui.selectedFileOutput.lastIndexOf('.');
+		if (lastDot !== -1) {
+			ui.selectedFileExtOutput = ui.selectedFileOutput.slice(lastDot, ui.selectedFileOutput.length);
+			ui.selectedFileNameOutput = ui.selectedFileOutput.slice(0, lastDot);
+		}
+
+		var fr = new FileReader();
+        fr.onload = function() {
+        	rom.file = new Uint8Array(fr.result);
+        };
+        fr.readAsArrayBuffer(fileList[0]);
+	}
+}
+
+function onRandomSeed() {
+	//console.log("ui.seedInput: " + ui.seedInput);
+	ui.seedInput.value = getRandomInt(0x7FFFFFFF).toString(10);
+}
+
+function onShuffleLevelsChanged() {
+	ui.shuffleLevelsSpoilersCheck.disabled = !ui.shuffleLevelsCheck.checked;
+	ui.shuffleBonusCheck.disabled = !ui.shuffleLevelsCheck.checked;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+	//console.log("DOM fully loaded and parsed");
+
+	// initialize ui
+	ui.initialize();
+
+	ui.seedRandomButton.addEventListener("click", onRandomSeed);
+	ui.fileInput.addEventListener("change", onFileSelect, false);
+	ui.shuffleLevelsCheck.addEventListener("change", onShuffleLevelsChanged);
+	ui.randomizeButton.addEventListener("click", randomizer.onRandomize);
+	
+	// initialize rom
+});
+</script>
+</html>
