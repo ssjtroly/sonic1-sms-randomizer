@@ -20,7 +20,7 @@
 	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
 	<br>
 	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
-	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-level-spoiler-input"/>&nbspShow Shuffled Level Spoiler<br>
+	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-level-spoiler-input" disabled/>&nbspShow Shuffled Level Spoiler<br>
 	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
 	<!--<input type="checkbox" id="shuffle-sfx-input" checked/>&nbspRandomize SFX<br>-->
 	<br>
@@ -54,7 +54,7 @@ function onRandomSeed() {
 }
 
 function onShuffleLevelsChanged() {
-	ui.shuffleLevelsSpoilersCheck.disabled = !ui.shuffleLevelsCheck.checked;
+	//ui.shuffleLevelsSpoilersCheck.disabled = !ui.shuffleLevelsCheck.checked;
 	ui.shuffleBonusCheck.disabled = !ui.shuffleLevelsCheck.checked;
 }
 
