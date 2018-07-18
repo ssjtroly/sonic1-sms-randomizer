@@ -12,17 +12,16 @@
 	<h1><u>Sonic the Hedgehog Randomizer v<div id="major-version" style="display:inline"></div>.<div id="minor-version" style="display:inline"></div></u></h1>
 	This is for Sonic the Hedgehog on <b><i>Sega Master System</i></b>.<br>
 	Tested ROM checksum:<br>
-		&nbsp&nbsp&nbsp&nbsp<i>CRC32</i>: B519E833<br>
-		&nbsp&nbsp&nbsp&nbsp<i>MD5</i>: DC13A61EAFE75C13C15B5ECE419AC57B<br>
-		&nbsp&nbsp&nbsp&nbsp<i>SHA256</i>: 6AD738965ECE231427EE046B9905CFEE470D5C01220AFDD934DA4673E4A2458B<br>
+	&nbsp&nbsp&nbsp&nbsp<i>CRC32</i>: B519E833<br>
+	&nbsp&nbsp&nbsp&nbsp<i>MD5</i>: DC13A61EAFE75C13C15B5ECE419AC57B<br>
+	&nbsp&nbsp&nbsp&nbsp<i>SHA256</i>: 6AD738965ECE231427EE046B9905CFEE470D5C01220AFDD934DA4673E4A2458B<br>
 	<br>
 	Seed: <input type="text" id="seed-input" /><input type="button" id="seed-generate" value="Random"/><br>
 	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
 	<br>
 	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
-	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-level-spoiler-input" disabled/>&nbspShow Shuffled Level Spoiler<br>
 	&nbsp&nbsp&nbsp&nbsp<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
-	<!--<input type="checkbox" id="shuffle-sfx-input" checked/>&nbspRandomize SFX<br>-->
+	<input type="checkbox" id="shuffle-sfx-input"/>&nbspRandomize SFX (potentially buggy)<br>
 	<br>
 	<input type="button" id="randomize-rom" value="Generate"/>
 </body>
@@ -54,7 +53,6 @@ function onRandomSeed() {
 }
 
 function onShuffleLevelsChanged() {
-	//ui.shuffleLevelsSpoilersCheck.disabled = !ui.shuffleLevelsCheck.checked;
 	ui.shuffleBonusCheck.disabled = !ui.shuffleLevelsCheck.checked;
 }
 

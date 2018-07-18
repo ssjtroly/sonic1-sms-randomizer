@@ -4,7 +4,6 @@ var ui = {
 	fileInput: null,
 	randomizeButton: null,
 	shuffleLevelsCheck: null,
-	shuffleLevelsSpoilersCheck: null,
 	shuffleBonusCheck: null,
 	shuffleSfxCheck: null,
 	majorVersionDiv: null,
@@ -22,7 +21,6 @@ var ui = {
 		this.seedInput = document.getElementById("seed-input");
 		this.selectedFileOutput = document.getElementById("selected-file");
 		this.shuffleLevelsCheck = document.getElementById("shuffle-levels-input");
-		this.shuffleLevelsSpoilersCheck = document.getElementById("shuffle-level-spoiler-input");
 		this.shuffleBonusCheck = document.getElementById("shuffle-bonus-input");
 		this.shuffleSfxCheck = document.getElementById("shuffle-sfx-input");
 		this.seedRandomButton = document.getElementById("seed-generate");
@@ -35,8 +33,7 @@ var ui = {
 		this.seedInput.value = "";
 		this.fileInput.value = "";
 
-		this.shuffleLevelsSpoilersCheck.disabled = true;
-		//this.shuffleLevelsSpoilersCheck.disabled = !this.shuffleLevelsCheck.checked;
 		this.shuffleBonusCheck.disabled = !this.shuffleLevelsCheck.checked;
+		this.shuffleSfxCheck.checked = false;
 	},
 };

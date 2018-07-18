@@ -12,25 +12,26 @@ var randomizer = {
 
 		var isShuffleLevelsChecked = ui.shuffleLevelsCheck.checked;
 		var isShuffleBonusChecked = ui.shuffleBonusCheck.checked;
-		//var isShuffleSfxChecked = ui.shuffleSfxCheck.checked;
+		var isShuffleSfxChecked = ui.shuffleSfxCheck.checked;
 
-		if (!isShuffleLevelsChecked) {
-		//if (!isShuffleLevelsChecked && !isShuffleSfxChecked) {
+		if (!isShuffleLevelsChecked && !isShuffleSfxChecked) {
 			alert("Nothing to randomize.");
 			return;
 		}
+
+		Math.seedrandom(ui.seedInput.value);
 
 		var ROM = rom.file.slice(0);
 		
 		if (isShuffleLevelsChecked) {
 			randomizer.shuffleLevels(ROM);
+			
+			if (isShuffleBonusChecked) {
+				randomizer.shuffleBonuses(ROM);
+			}
 		}
 
-		//if (isShuffleSfxChecked) {
-		//	randomizer.shuffleSfx(ROM);
-		//}
-
-		if (isShuffleBonusChecked) {
+		if (isShuffleSfxChecked) {
 			randomizer.shuffleSfx(ROM);
 		}
 
@@ -78,6 +79,19 @@ var randomizer = {
 	},
 
 	shuffleSfx: function(ROM) {
-		
+		var romData = ROM.slice(0);
+		var sfxPointerPool = rom.sfxPointers.slice(0);
+		var sfxPointers = rom.sfxPointers;
+
+		for (var i = 0; i < sfxPointers.length; i++) {
+			var poolIndex = getRandomInt(sfxPointerPool.length);
+
+			ROM[sfxPointers[i]] = romData[sfxPointerPool[poolIndex]];
+			ROM[sfxPointers[i]+1] = romData[sfxPointerPool[poolIndex]+1];
+
+			var first = sfxPointerPool.slice(0, poolIndex);
+			var second = sfxPointerPool.slice(poolIndex+1);
+			sfxPointerPool = first.concat(second);
+		}
 	},
 }
