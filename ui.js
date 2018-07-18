@@ -9,6 +9,7 @@ var ui = {
 	shuffleMusicCheck: null,
 	shufflePaletteColorsCheck: null,
 	shufflePalettesCheck: null,
+	shufflePalettePointersCheck: null,
 	majorVersionDiv: null,
 	minorVersionDiv: null,
 
@@ -29,6 +30,7 @@ var ui = {
 		this.shuffleMusicCheck = document.getElementById("shuffle-music-input");
 		this.shufflePaletteColorsCheck = document.getElementById("shuffle-palette-colors-input");
 		this.shufflePalettesCheck = document.getElementById("shuffle-palettes-input");
+		this.shufflePalettePointersCheck = document.getElementById("shuffle-palette-pointers-input");
 		this.seedRandomButton = document.getElementById("seed-generate");
 		this.fileInput = document.getElementById("file");
 		this.randomizeButton = document.getElementById("randomize-rom");

@@ -16,13 +16,15 @@ var randomizer = {
 		var isShuffleMusicChecked = ui.shuffleMusicCheck.checked;
 		var isShufflePaletteColorsChecked = ui.shufflePaletteColorsCheck.checked;
 		var isShufflePalettesChecked = ui.shufflePalettesCheck.checked;
+		var isShufflePalettePointersChecked = ui.shufflePalettePointersCheck.checked;
 
 		if (!isShuffleLevelsChecked && 
 			!isShuffleBonusChecked && 
 			!isShuffleSfxChecked && 
 			!isShuffleMusicChecked &&
 			!isShufflePaletteColorsChecked &&
-			!isShufflePalettesChecked) 
+			!isShufflePalettesChecked &&
+			!isShufflePalettePointersChecked) 
 		{
 			alert("Nothing to randomize.");
 			return;
@@ -54,6 +56,10 @@ var randomizer = {
 
 		if (isShufflePalettesChecked) {
 			randomizer.shufflePalettes(ROM);
+		}
+
+		if (isShufflePalettePointersChecked) {
+			randomizer.shufflePalettePointers(ROM);
 		}
 
 		downloadBlob(
@@ -189,5 +195,86 @@ var randomizer = {
 
 	shufflePalettes: function(ROM) {
 		var romData = ROM.slice(0);
+
+		var palette16Pointers = rom.palette16Pointers;
+		var palette16PointersPool = palette16Pointers.slice(0);
+
+		for (var i = 0; i < palette16Pointers.length; i++) {
+			var poolIndex = getRandomInt(palette16PointersPool.length);
+
+			for (var j = 0; j < 16; j++) {
+				ROM[palette16Pointers[i+j]] = romData[palette16PointersPool[poolIndex]+j];
+			}
+
+			var first = palette16PointersPool.slice(0, poolIndex);
+			var second = palette16PointersPool.slice(poolIndex+1);
+			palette16PointersPool = first.concat(second);
+		}
+
+		var palette32Pointers = rom.palette32Pointers;
+		var palette32PointersPool = palette32Pointers.slice(0);
+		for (var i = 0; i < palette32Pointers.length; i++) {
+			var poolIndex = getRandomInt(palette32PointersPool.length);
+
+			for (var j = 0; j < 32; j++) {
+				ROM[palette32Pointers[i+j]] = romData[palette32PointersPool[poolIndex]+j];
+			}
+
+			var first = palette32PointersPool.slice(0, poolIndex);
+			var second = palette32PointersPool.slice(poolIndex+1);
+			palette32PointersPool = first.concat(second);
+		}
+
+		var palette48Pointers = rom.palette48Pointers;
+		var palette48PointersPool = palette48Pointers.slice(0);
+		for (var i = 0; i < palette48Pointers.length; i++) {
+			var poolIndex = getRandomInt(palette48PointersPool.length);
+
+			for (var j = 0; j < 48; j++) {
+				ROM[palette48Pointers[i+j]] = romData[palette48PointersPool[poolIndex]+j];
+			}
+
+			var first = palette48PointersPool.slice(0, poolIndex);
+			var second = palette48PointersPool.slice(poolIndex+1);
+			palette48PointersPool = first.concat(second);
+		}
+
+		var palette64Pointers = rom.palette64Pointers;
+		var palette64PointersPool = palette64Pointers.slice(0);
+		for (var i = 0; i < palette64Pointers.length; i++) {
+			var poolIndex = getRandomInt(palette64PointersPool.length);
+
+			for (var j = 0; j < 64; j++) {
+				ROM[palette64Pointers[i+j]] = romData[palette64PointersPool[poolIndex]+j];
+			}
+
+			var first = palette64PointersPool.slice(0, poolIndex);
+			var second = palette64PointersPool.slice(poolIndex+1);
+			palette64PointersPool = first.concat(second);
+		}
+	},
+
+	shufflePalettePointers: function(ROM) {
+		var romData = ROM.slice(0);
+		var levelPalettePointer = rom.levelPalettesPointer;
+		var palettePointers = [];
+
+		for (var i = 0; i < 14; i++) {
+			var offset = levelPalettePointer+(i*2);
+			palettePointers.push([romData[offset], romData[offset+1]]);
+		}
+		var palettePointersPool = palettePointers.slice(0);
+
+		for (var i = 0; i < palettePointers.length; i++) {
+			var offset = levelPalettePointer+(i*2);
+			var poolIndex = getRandomInt(palettePointersPool.length);
+
+			ROM[offset] = palettePointersPool[poolIndex][0];
+			ROM[offset+1] = palettePointersPool[poolIndex][1];
+
+			var first = palettePointersPool.slice(0, poolIndex);
+			var second = palettePointersPool.slice(poolIndex+1);
+			palettePointersPool = first.concat(second);
+		}
 	},
 }
