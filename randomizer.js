@@ -12,19 +12,19 @@ var randomizer = {
 
 		var isShuffleLevelsChecked = ui.shuffleLevelsCheck.checked;
 		var isShuffleBonusChecked = ui.shuffleBonusCheck.checked;
+		var isRandomizeEnemiesChecked = ui.randomizeEnemiesCheck.checked;
+		var isRandomizeMonitorsChecked = ui.randomizeMonitorsCheck.checked;
 		var isShuffleSfxChecked = ui.shuffleSfxCheck.checked;
 		var isShuffleMusicChecked = ui.shuffleMusicCheck.checked;
 		var isShufflePaletteColorsChecked = ui.shufflePaletteColorsCheck.checked;
-		var isShufflePalettesChecked = ui.shufflePalettesCheck.checked;
-		var isShufflePalettePointersChecked = ui.shufflePalettePointersCheck.checked;
 
 		if (!isShuffleLevelsChecked && 
 			!isShuffleBonusChecked && 
+			!isRandomizeEnemiesChecked &&
+			!isRandomizeMonitorsChecked &&
 			!isShuffleSfxChecked && 
 			!isShuffleMusicChecked &&
-			!isShufflePaletteColorsChecked &&
-			!isShufflePalettesChecked &&
-			!isShufflePalettePointersChecked) 
+			!isShufflePaletteColorsChecked) 
 		{
 			alert("Nothing to randomize.");
 			return;
@@ -42,6 +42,14 @@ var randomizer = {
 			randomizer.shuffleBonuses(ROM);
 		}
 
+		if (isRandomizeEnemiesChecked) {
+			randomizer.randomizeEnemies(ROM);
+		}
+
+		if (isRandomizeMonitorsChecked) {
+			randomizer.randomizeMonitors(ROM);
+		}
+
 		if (isShuffleSfxChecked) {
 			randomizer.shuffleSfx(ROM);
 		}
@@ -54,102 +62,145 @@ var randomizer = {
 			randomizer.shufflePaletteColors(ROM);
 		}
 
-		if (isShufflePalettesChecked) {
-			randomizer.shufflePalettes(ROM);
-		}
-
-		if (isShufflePalettePointersChecked) {
-			randomizer.shufflePalettePointers(ROM);
-		}
-
+///*
 		downloadBlob(
 			ROM, 
 			ui.selectedFileNameOutput + "-" + ui.seedInput.value + ui.selectedFileExtOutput, 
-			"application/octet-stream"
+			"application/" + ui.selectedFileExtOutput
 		);
+//*/
 
 		//console.log(ROM);
 	},
 
 	shuffleLevels: function(ROM) {
-		var romData = ROM.slice(0);
+		var levelHeaderPointerPool = rom.levelHeaderPointers.slice(0);
+		var levelHeaderPointers = rom.levelHeaderPointers;
 
-		var levelPointerPool = rom.levelHeaderPointers.slice(0);
-		var levelPointers = rom.levelHeaderPointers;
+		var levelHeaderPointersBegin = levelHeaderPointers[0];
 
-		for (var i = 0; i < levelPointers.length; i++) {
-			var poolIndex = getRandomInt(levelPointerPool.length);
+		for (var i = 0; i < levelHeaderPointers.length; i++) {
+			var poolIndex = getRandomInt(levelHeaderPointers.length);
 
-			ROM[levelPointers[i]] = romData[levelPointerPool[poolIndex]];
-			ROM[levelPointers[i]+1] = romData[levelPointerPool[poolIndex]+1];
+			// shuffle level header pointers (this is causing graphics issues with robotnik/boss projectiles)
+			ROM[levelHeaderPointers[i]] = rom.file[levelHeaderPointerPool[poolIndex]];
+			ROM[levelHeaderPointers[i]+1] = rom.file[levelHeaderPointerPool[poolIndex]+1];
 
-			var first = levelPointerPool.slice(0, poolIndex);
-			var second = levelPointerPool.slice(poolIndex+1);
-			levelPointerPool = first.concat(second);
+			eraseArrayElement(levelHeaderPointerPool, poolIndex);
+			//var first = levelHeaderPointerPool.slice(0, poolIndex);
+			//var second = levelHeaderPointerPool.slice(poolIndex+1);
+			//levelHeaderPointerPool = first.concat(second);
 		}
 	},
 
 	shuffleBonuses: function(ROM) {
-		var romData = ROM.slice(0);
-
 		var bonusPointerPool = rom.bonusHeaderPointers.slice(0);
 		var bonusPointers = rom.bonusHeaderPointers;
 
 		for (var i = 0; i < bonusPointers.length; i++) {
 			var poolIndex = getRandomInt(bonusPointerPool.length);
 
-			ROM[bonusPointers[i]] = romData[bonusPointerPool[poolIndex]];
-			ROM[bonusPointers[i]+1] = romData[bonusPointerPool[poolIndex]+1];
+			ROM[bonusPointers[i]] = rom.file[bonusPointerPool[poolIndex]];
+			ROM[bonusPointers[i]+1] = rom.file[bonusPointerPool[poolIndex]+1];
 
-			var first = bonusPointerPool.slice(0, poolIndex);
-			var second = bonusPointerPool.slice(poolIndex+1);
-			bonusPointerPool = first.concat(second);
+			eraseArrayElement(bonusPointerPool, poolIndex);
+			//var first = bonusPointerPool.slice(0, poolIndex);
+			//var second = bonusPointerPool.slice(poolIndex+1);
+			//bonusPointerPool = first.concat(second);
+		}
+	},
+
+	randomizeEnemies: function(ROM) {
+		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
+			var headerObject = new LevelHeader(ROM, getLevelHeaderAddress(rom.file, rom.levelHeaderPointers[i]));
+			var objectLayoutAddress = getObjectLayoutAddress(headerObject.objectLayout);
+			var objectCount = rom.file[objectLayoutAddress];
+
+			//console.log("level: " + i);
+
+			//var originalEnemies = [];
+			var occuringEnemies = [];
+			for (var j = 0; j < objectCount; j++) {
+				var offset = 1+(j*3); // 1 byte offset for count plus 3 bytes for each object entry
+
+				var objectIndex = rom.file[objectLayoutAddress+offset];
+				//var objectX = rom.file[objectLayoutAddress+offset+1];
+				//var objectY = rom.file[objectLayoutAddress+offset+2];
+
+				if (rom.badnikIDs.includes(objectIndex)) {
+					var newObjectIndex = rom.badnikIDs[getRandomInt(rom.badnikIDs.length)];
+					//originalEnemies.push(objectIndex);
+					occuringEnemies.push(newObjectIndex);
+					ROM[objectLayoutAddress+offset] = newObjectIndex;	
+				}
+			}
+
+			//console.log("    new enemies included...");
+			//for (var j = 0; j < occuringEnemies.length; j++) {
+				//console.log("        " + originalEnemies[j] + " replaced with " + occuringEnemies[j]);
+			//}
+		}
+	},
+
+	randomizeMonitors: function(ROM) {
+		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
+			var headerObject = new LevelHeader(ROM, getLevelHeaderAddress(rom.file, rom.levelHeaderPointers[i]));
+			var objectLayoutAddress = getObjectLayoutAddress(headerObject.objectLayout);
+			var objectCount = rom.file[objectLayoutAddress];
+
+			for (var j = 0; j < objectCount; j++) {
+				var offset = 1+(j*3); // 1 byte offset for count plus 3 bytes for each object entry
+
+				var objectIndex = rom.file[objectLayoutAddress+offset];
+				//var objectX = rom.file[objectLayoutAddress+offset+1];
+				//var objectY = rom.file[objectLayoutAddress+offset+2];
+
+				if (rom.monitorIDs.includes(objectIndex)) {
+					ROM[objectLayoutAddress+offset] = rom.monitorIDs[getRandomInt(rom.monitorIDs.length)];
+				}
+			}
 		}
 	},
 
 	shuffleSfx: function(ROM) {
-		var romData = ROM.slice(0);
-
 		var sfxPointerPool = rom.sfxPointers.slice(0);
 		var sfxPointers = rom.sfxPointers;
 
 		for (var i = 0; i < sfxPointers.length; i++) {
 			var poolIndex = getRandomInt(sfxPointerPool.length);
 
-			ROM[sfxPointers[i]] = romData[sfxPointerPool[poolIndex]];
-			ROM[sfxPointers[i]+1] = romData[sfxPointerPool[poolIndex]+1];
+			ROM[sfxPointers[i]] = rom.file[sfxPointerPool[poolIndex]];
+			ROM[sfxPointers[i]+1] = rom.file[sfxPointerPool[poolIndex]+1];
 
-			var first = sfxPointerPool.slice(0, poolIndex);
-			var second = sfxPointerPool.slice(poolIndex+1);
-			sfxPointerPool = first.concat(second);
+			eraseArrayElement(sfxPointerPool, poolIndex);
+			//var first = sfxPointerPool.slice(0, poolIndex);
+			//var second = sfxPointerPool.slice(poolIndex+1);
+			//sfxPointerPool = first.concat(second);
 		}
 	},
 
-	shuffleMusic: function(ROM) {
-		var romData = ROM.slice(0);
-
+	shuffleMusic_OLD: function(ROM) {
 		var musicPointerPool = rom.musicPointers.slice(0);
 		var musicPointers = rom.musicPointers;
 
 		for (var i = 0; i < musicPointers.length; i++) {
 			var poolIndex = getRandomInt(musicPointerPool.length);
 
-			ROM[musicPointers[i]] = romData[musicPointerPool[poolIndex]];
-			ROM[musicPointers[i]+1] = romData[musicPointerPool[poolIndex]+1];
+			ROM[musicPointers[i]] = rom.file[musicPointerPool[poolIndex]];
+			ROM[musicPointers[i]+1] = rom.file[musicPointerPool[poolIndex]+1];
 
-			var first = musicPointerPool.slice(0, poolIndex);
-			var second = musicPointerPool.slice(poolIndex+1);
-			musicPointerPool = first.concat(second);
+			eraseArrayElement(musicPointerPool, poolIndex);
+			//var first = musicPointerPool.slice(0, poolIndex);
+			//var second = musicPointerPool.slice(poolIndex+1);
+			//musicPointerPool = first.concat(second);
 		}
 
 		var musicDataPointer = rom.musicDataPointers;
 		var musicDataPointers = [];
 
-		// assuming first 14 pointers are for background music (since there are only 14 songs) 
-		// shuffling all 21 pointers causes graphics bugs
-		for (var i = 0; i < 14; i++) {
+		for (var i = 0; i < 21; i++) {
 			var offset = musicDataPointer+(i*2);
-			musicDataPointers.push([romData[offset], romData[offset+1]]);
+			musicDataPointers.push([rom.file[offset], rom.file[offset+1]]);
 		}
 		var musicDataPointersPool = musicDataPointers.slice(0);
 
@@ -160,14 +211,45 @@ var randomizer = {
 			ROM[offset] = musicDataPointersPool[poolIndex][0];
 			ROM[offset+1] = musicDataPointersPool[poolIndex][1];
 
-			var first = musicDataPointersPool.slice(0, poolIndex);
-			var second = musicDataPointersPool.slice(poolIndex+1);
-			musicDataPointersPool = first.concat(second);
+			eraseArrayElement(musicDataPointersPool, poolIndex);
+			//var first = musicDataPointersPool.slice(0, poolIndex);
+			//var second = musicDataPointersPool.slice(poolIndex+1);
+			//musicDataPointersPool = first.concat(second);
+		}
+	},
+
+	shuffleMusic: function(ROM) {
+		var musicPool = [
+			0x0,
+			0x1,
+			0x2,
+			0x3,
+			0x4,
+			0x5,
+			0xA,
+			0xB,
+			0xC,
+			0xD,
+			0xE
+		];
+
+		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
+			var levelHeaderAddress = getLevelHeaderAddress(rom.file, rom.levelHeaderPointers[i]);
+			var music = rom.file[levelHeaderAddress+levelHeaderFieldOffset.music];
+			//console.log("level " + i + " music: " + music);
+			if (musicPool.includes(music)) {
+				var newMusicIndex = getRandomInt(musicPool.length);
+				var newMusic = musicPool[newMusicIndex];
+				if (newMusicIndex != 0xA) {
+
+				}
+				ROM[levelHeaderAddress+levelHeaderFieldOffset.music] = newMusic;
+				//console.log("    new music: " + newMusic);
+			}
 		}
 	},
 
 	shufflePaletteColors: function(ROM) {
-		var romData = ROM.slice(0);
 		var palettePointers = rom.palettePointers;
 
 		for (var i = 0; i < palettePointers.length; i++) {
@@ -176,8 +258,7 @@ var randomizer = {
 
 			var colorPool = [];
 			for (var j = 0; j < paletteLen; j++) {
-				var color = romData[paletteAddr+j];
-				//console.log("color: " + color);
+				var color = rom.file[paletteAddr+j];
 				colorPool.push(color);
 			}
 
@@ -186,95 +267,11 @@ var randomizer = {
 
 				ROM[paletteAddr+j] = colorPool[poolIndex];
 
-				var first = colorPool.slice(0, poolIndex);
-				var second = colorPool.slice(poolIndex+1);
-				colorPool = first.concat(second);
+				eraseArrayElement(colorPool, poolIndex);
+				//var first = colorPool.slice(0, poolIndex);
+				//var second = colorPool.slice(poolIndex+1);
+				//colorPool = first.concat(second);
 			}
-		}
-	},
-
-	shufflePalettes: function(ROM) {
-		var romData = ROM.slice(0);
-
-		var palette16Pointers = rom.palette16Pointers;
-		var palette16PointersPool = palette16Pointers.slice(0);
-
-		for (var i = 0; i < palette16Pointers.length; i++) {
-			var poolIndex = getRandomInt(palette16PointersPool.length);
-
-			for (var j = 0; j < 16; j++) {
-				ROM[palette16Pointers[i+j]] = romData[palette16PointersPool[poolIndex]+j];
-			}
-
-			var first = palette16PointersPool.slice(0, poolIndex);
-			var second = palette16PointersPool.slice(poolIndex+1);
-			palette16PointersPool = first.concat(second);
-		}
-
-		var palette32Pointers = rom.palette32Pointers;
-		var palette32PointersPool = palette32Pointers.slice(0);
-		for (var i = 0; i < palette32Pointers.length; i++) {
-			var poolIndex = getRandomInt(palette32PointersPool.length);
-
-			for (var j = 0; j < 32; j++) {
-				ROM[palette32Pointers[i+j]] = romData[palette32PointersPool[poolIndex]+j];
-			}
-
-			var first = palette32PointersPool.slice(0, poolIndex);
-			var second = palette32PointersPool.slice(poolIndex+1);
-			palette32PointersPool = first.concat(second);
-		}
-
-		var palette48Pointers = rom.palette48Pointers;
-		var palette48PointersPool = palette48Pointers.slice(0);
-		for (var i = 0; i < palette48Pointers.length; i++) {
-			var poolIndex = getRandomInt(palette48PointersPool.length);
-
-			for (var j = 0; j < 48; j++) {
-				ROM[palette48Pointers[i+j]] = romData[palette48PointersPool[poolIndex]+j];
-			}
-
-			var first = palette48PointersPool.slice(0, poolIndex);
-			var second = palette48PointersPool.slice(poolIndex+1);
-			palette48PointersPool = first.concat(second);
-		}
-
-		var palette64Pointers = rom.palette64Pointers;
-		var palette64PointersPool = palette64Pointers.slice(0);
-		for (var i = 0; i < palette64Pointers.length; i++) {
-			var poolIndex = getRandomInt(palette64PointersPool.length);
-
-			for (var j = 0; j < 64; j++) {
-				ROM[palette64Pointers[i+j]] = romData[palette64PointersPool[poolIndex]+j];
-			}
-
-			var first = palette64PointersPool.slice(0, poolIndex);
-			var second = palette64PointersPool.slice(poolIndex+1);
-			palette64PointersPool = first.concat(second);
-		}
-	},
-
-	shufflePalettePointers: function(ROM) {
-		var romData = ROM.slice(0);
-		var levelPalettePointer = rom.levelPalettesPointer;
-		var palettePointers = [];
-
-		for (var i = 0; i < 14; i++) {
-			var offset = levelPalettePointer+(i*2);
-			palettePointers.push([romData[offset], romData[offset+1]]);
-		}
-		var palettePointersPool = palettePointers.slice(0);
-
-		for (var i = 0; i < palettePointers.length; i++) {
-			var offset = levelPalettePointer+(i*2);
-			var poolIndex = getRandomInt(palettePointersPool.length);
-
-			ROM[offset] = palettePointersPool[poolIndex][0];
-			ROM[offset+1] = palettePointersPool[poolIndex][1];
-
-			var first = palettePointersPool.slice(0, poolIndex);
-			var second = palettePointersPool.slice(poolIndex+1);
-			palettePointersPool = first.concat(second);
 		}
 	},
 }

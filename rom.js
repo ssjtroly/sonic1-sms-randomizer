@@ -1,9 +1,39 @@
 var rom = {
 	file: null,
 
-	// doesnt appear to be useful since palettes have different sizes
-	// assuming simply shuffling pointers would cause bugs
-	levelPalettesPointer: 0x0627C, // 34 bytes
+	levelHeaderPointerBegin: 0x15580,
+
+	badnikIDs: [
+		0x08, // Badnik "Crabmeat" (GH)
+		0x0E, // Badnik "Buzz Bomber" (GH/B)
+		0x10, // Badnik "Moto Bug" (GH)
+		0x11, // Badnik "Newtron" (GH) 
+		0x1B, // Badnik "Ball Hog" (SB) 
+		0x1F, // Badnik "Caterkiller" (SB) 
+		0x26, // Badnik "Chopper" (J, B) 
+		0x2D, // Badnik "Yadrin" (B) 
+		0x32, // Badnik "Bomb" (SKYB)  
+		0x35, // Badnik "Unidus" (SKYB)  
+		0x3C, // Badnik "Jaws" (L) 
+		0x44, // Badnik "Burrobot" (L)
+	],
+
+	bossIDs: [
+		0x12, // Robotnik - Green Hill Boss (GH) 
+		0x22, // Robotnik - Scrap Brain Boss (SB) 
+		0x2C, // Robotnik - Jungle Boss (J) 
+		0x48, // Robotnik - Bridge Boss (SB) 
+		0x49, // Robotnik - Labyrinth Boss (L) 
+		0x4A, // Robotnik - Sky Base Boss (SKYB) 
+	],
+
+	monitorIDs: [
+		0x01, // Super Ring monitor 
+		0x02, // Power Sneakers monitor 
+		0x03, // One-Up monitor 
+		0x04, // Shield monitor 
+		0x05, // Invincibility monitor
+	],
 
 	// [address, length]
 	palettePointers: [
@@ -38,58 +68,30 @@ var rom = {
 		[0x0731C, 16], // Boss sprite
 	],
 
-	palette16Pointers: [
-		0x01F9D, // Sky Base 1 Lightning
-		0x0626C, // End post
-		0x0657E, // Bonus auto
-		0x0731C, // Boss sprite
+/*
+	randomMusicPool: [
+	    00–05: Level Music
+	    //06: Title Music
+	    //08: Invincibility
+	    //09: Level Complete
+	    //0A: Dead
+	    0B/0C/0D: Boss
+	    0E: Credits
+	    10: Bonus Stage
 	],
-
-	palette32Pointers: [
-		0x00F0E, // Main map
-		0x00F2E, // Main map 2
-		0x013E1, // Title Screen
-		0x014FC, // Game over
-		0x01B8D, // Level Complete
-		0x02AD6, // Credits 
-		0x0629E, // Green hill load
-		0x062EE, // Bridge load
-		0x0633E, // Jungle load
-		0x0638E, // Labyrinth load
-		0x063DE, // Scrap Brain load
-		0x0643E, // Sky Base load
-		0x0655E, // Bonus load
-		0x0658E, // Sky Base 3/Inside load
-	],
-
-	palette48Pointers: [
-		0x062BE, // Green Hill auto
-		0x0630E, // Bridge auto
-		0x0635E, // Jungle auto
-		0x063AE, // Labyrinth auto
-	],
-
-	palette64Pointers: [
-		0x0024B, // Labyrinth underwater
-		0x063FE, // Scrap Brain auto
-		0x0645E, // Sky Base auto
-		0x0649E, // Sky Base lightning charge auto
-		0x064DE, // Sky Base lightning fire auto
-		0x0651E, // Sky Base 2 auto
-		0x065AE, // Sky Base 3/Inside auto
-	],
+*/
 
 	musicPointers: [
-		0x00D3D, // Main Map Music
-		0x012D9, // Title Screen Music
-		0x02709, // Credits Music
-		0x03641, // Death Music
-		0x05042, // Death Drowned Music
-		0x05D24, // Invincibility Music
-		0x05EDC, // Chaos Emerald Gained Music
-		0x05FCF, // Level Completed (post) Music
-		0x07045, // Green Hill Boss Music
-		0x07487, // Level Completed (machine) music
+		//0x00D3D, // Main Map Music
+		//0x012D9, // Title Screen Music
+		//0x02709, // Credits Music
+		//0x03641, // Death Music
+		//0x05042, // Death Drowned Music
+		//0x05D24, // Invincibility Music
+		//0x05EDC, // Chaos Emerald Gained Music
+		//0x05FCF, // Level Completed (post) Music
+		//0x07045, // Green Hill Boss Music
+		//0x07487, // Level Completed (machine) music
 		0x08088, // Jungle Boss Music
 		0x084D4, // Bridge Boss Music
 		0x092A9, // Labyrinth Boss Music
@@ -100,7 +102,7 @@ var rom = {
 	musicDataPointers: 0x0C716, // 42 bytes
 
 	sfxPointers: [
-		0x014C1, // continue
+		//0x014C1, // continue
 		0x017D8, // Chaos Emerald tally
 		0x0180D, // Sonic Left tally
 		0x01854, // Special Bonus tally
@@ -166,53 +168,79 @@ var rom = {
 	],
 
 	levelHeaderPointers: [
-		0x15580, // Green Hill 1 L.H. pointer
-		0x15582, // Green Hill 2 L.H. Pointer
-		0x15584, // Green Hill 3 L.H. Pointer
-
-		0x15586, // Bridge 1 L.H. Pointer
-		0x15588, // Bridge 2 L.H. Pointer
-		0x1558A, // Bridge 3 L.H. Pointer
-
-		0x1558C, // Jungle 1 L.H. Pointer
-		0x1558E, // Jungle 2 L.H. Pointer
-		0x15590, // Jungle 3 L.H. Pointer
-
-		0x15592, // Labyrinth 1 L.H. Pointer
-		0x15594, // Labyrinth 2 L.H. Pointer
-		0x15596, // Labyrinth 3 L.H. Pointer
-
-		0x15592, // Labyrinth 1 L.H. Pointer
-		0x15594, // Labyrinth 2 L.H. Pointer
-		0x15596, // Labyrinth 3 L.H. Pointer
-
-		0x15598, // Scrap Brain 1 L.H. Pointer
-		0x1559A, // Scrap Brain 2 L.H. Pointer
-		0x1559C, // Scrap Brain 3 L.H. Pointer
-
-		0x1559E, // Sky Base 1 L.H. Pointer
-		0x155A0, // Sky Base 2 L.H. Pointer
-		0x155A2, // Sky Base 3 L.H. Pointer
-
-		//0x155A8, // SB 2 Area 1 -> 2 L.H. Pntr
-		//0x155AA, // SB 2 Area 1 -> 3 L.H. Pntr
-		//0x155AC, // SB 2 Area 2 -> 1 [TP] L.H. Pntr
-		//0x155AE, // SB 2 Area 2 -> 3 [TP] L.H. Pntr
-		//0x155B0, // SB 2 Area 2 -> 1 L.H. Pntr
-		//0x155B2, // SB 2 Area 3 -> 1 L.H. Pntr
-
-		//0x155B4, // Sky Base 2 area 2 L.H. Pntr
-		//0x155B6, // Sky Base 2 area 2 L.H. Pntr 2
+		0x15580, 	// 0: Green Hill Act 1
+		0x15582, 	// 1: Green Hill Act 2
+		0x15584, 	// 2: Green Hill Act 3
+		0x15586, 	// 3: Bridge Act 1
+		0x15588, 	// 4: Bridge Act 2
+		0x1558A, 	// 5: Bridge Act 3
+		0x1558C, 	// 6: Jungle Act 1
+		0x1558E, 	// 7: Jungle Act 2
+		0x15590, 	// 8: Jungle Act 3
+		0x15592, 	// 9: Labyrinth Act 1
+		0x15594, 	// 10: Labyrinth Act 2
+		0x15596, 	// 11: Labyrinth Act 3
+		0x15598, 	// 12: Scrap Brain Act 1
+		0x1559A, 	// 13: Scrap Brain Act 2
+		0x1559C, 	// 14: Scrap Brain Act 3
+		0x1559E, 	// 15: Sky Base Act 1
+		0x155A0, 	// 16: Sky Base Act 2
+		0x155A2, 	// 17: Sky Base Act 3
 	],
+	/*
+		0x155A4, 	// 18: End Sequence
+		// 0x155A6,	// 19: UNUSED (invalid data)
+		0x155A8, 	// 20: Scrap Brain Act 2 (Emerald Maze), from corridor
+		0x155AA, 	// 21: Scrap Brain Act 2 (Ballhog Area)
+		0x155AC, 	// 22: Scrap Brain Act 2, from transporter
+		0x155AE, 	// 23: Scrap Brain Act 2 (Emerald Maze), from transporter
+		0x155B0, 	// 24: Scrap Brain Act 2, from Emerald Maze
+		0x155B2, 	// 25: Scrap Brain Act 2, from Ballhog Area
+		0x155B4, 	// 26: Sky Base Act 2 (Interior)
+		0x155B6, 	// 27: Sky Base Act 2 (Interior), this one is identical
+		0x155B8, 	// 28: Special Stage 1
+		0x155BA,	// 29: Special Stage 2
+		0x155BC, 	// 30: Special Stage 3
+		0x155BE, 	// 31: Special Stage 4
+		0x155C0, 	// 32: Special Stage 5
+		0x155C2, 	// 33: Special Stage 6
+		0x155C4, 	// 34: Special Stage 7
+		0x155C6, 	// 35: Special Stage 8
+		// 0x155C8, 	// 36: UNUSED (invalid data)
+	],
+	*/
 
 	bonusHeaderPointers: [
-		0x155B8, // Bonus 1 L.H. Pntr
-		0x155BA, // Bonus 2 L.H. Pntr
-		0x155BC, // Bonus 3 L.H. Pntr
-		0x155BE, // Bonus 4 L.H. Pntr
-		0x155C0, // Bonus 5 L.H. Pntr
-		0x155C2, // Bonus 6 L.H. Pntr
-		0x155C4, // Bonus 7 L.H. Pntr
-		0x155C6	// Bonus 8 L.H. Pntr
+		0x155B8, 	// 28: Special Stage 1
+		0x155BA,	// 29: Special Stage 2
+		0x155BC, 	// 30: Special Stage 3
+		0x155BE, 	// 31: Special Stage 4
+		0x155C0, 	// 32: Special Stage 5
+		0x155C2, 	// 33: Special Stage 6
+		0x155C4, 	// 34: Special Stage 7
+		0x155C6, 	// 35: Special Stage 8
 	],
+
+	ScrollingAndRingHUDFlags: {
+		Invalid: 0x01,			// Sonic immediately dies, the game hangs and doesn't reload the level; purpose unknown
+		DemoPlay: 0x02, 		// The demo play data controls Sonic
+		ShowRings: 0x04, 		// Shows ring count in HUD and rings are displayed. When this value is not included no rings are visible, 
+						 		//     even though the sparkle effect occurs when you collect them
+		AutoRightScroll: 0x08,  // The level automatically scrolls to the right (ala Bridge Act 2)
+		PauseUpScroll: 0x10, 	// After a pause, the level automatically scrolls upwards! If you get caught at the bottom of the screen, you die
+		SmoothScroll: 0x20, 	// The screen scrolls smoothly, allowing you to get ahead of it
+		OscilateScroll: 0x40, 	// Slow up and down wave effect (ala Sky Base Act 2)
+		NoDownScroll: 0x80, 	// Screen does not scroll down (ala Jungle Act 2). If you get caught at the bottom of the screen, you die
+	},
+
+	TimeHUDAndLightning: {
+		SpecialStage: 0x01, 	 // Centers the time display when on a special stage. Outside of the special stage causes the game to switch to the special stage
+	    LightningEffect: 0x02, 	 // Uses the lightning effect. This overrides the level's own palette
+	    Unknown1: 0x04, 		 // No effect?
+	    Unknown2: 0x08, 		 // No effect?
+	    UnderwaterPalette: 0x10, // Use the boss underwater palette (ala Labyrinth Act 3)
+	    DisplayTime: 0x20, 		 // Displays the time
+	    LockScroll: 0x40, 		 // Locks the screen, no scrolling occurs
+	    Unknown3: 0x80 			 // No effect?
+	},
 }

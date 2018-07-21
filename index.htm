@@ -1,62 +1,54 @@
 <html>
 <head><title>Sonic the Hedgehog Randomizer</title>
-<script src="randomizer.js"></script>
 <script src="seedrandom.min.js"></script>
 <script src="utility.js"></script>
-<script src="download.js"></script>
+
 <script src="rom.js"></script>
+<script src="levelheader.js"></script>
+<script src="objectlayout.js"></script>
 <script src="randomizer.js"></script>
+<script src="download.js"></script>
 
 </head>
 <body>
-	<h1><u>Sonic the Hedgehog Randomizer v<div id="major-version" style="display:inline"></div>.<div id="minor-version" style="display:inline"></div></u></h1>
-	This is for Sonic the Hedgehog on <b><i>Sega Master System</i></b>.<br>
-	Tested ROM checksum:<br>
-	&nbsp&nbsp&nbsp&nbsp<i>CRC32</i>: B519E833<br>
-	&nbsp&nbsp&nbsp&nbsp<i>MD5</i>: DC13A61EAFE75C13C15B5ECE419AC57B<br>
-	&nbsp&nbsp&nbsp&nbsp<i>SHA256</i>: 6AD738965ECE231427EE046B9905CFEE470D5C01220AFDD934DA4673E4A2458B<br>
+	<h1 style="display: inline;"><u>Sonic the Hedgehog Randomizer v<div id="major-version" style="display:inline"></div>.<div id="minor-version" style="display:inline"></div></u></h1><br>
+	This is a randomizer for Sonic the Hedgehog on <b><i>Sega Master System</i></b> by <a href="https://github.com/ssjtroly">ssjtroly</a>.<br>
 	<br>
+	ROM Checksums:<br>
+	<table style="margin-left: 24px;">
+	<tr>
+	<td><i>CRC32:</i></td><td style="background-color: #D0D0D0;">B519E833</td>
+	</tr><tr>
+	<td><i>MD5:</i></td><td style="background-color: #D0D0D0;">DC13A61EAFE75C13C15B5ECE419AC57B</td>
+	</tr><tr>
+	<td><i>SHA256:</i></td><td style="background-color: #D0D0D0;">6AD738965ECE231427EE046B9905CFEE470D5C01220AFDD934DA4673E4A2458B</td>
+	</tr>
+	</table>
+
+	<br>
+	<hr><br>
 	Seed: <input type="text" id="seed-input" /><input type="button" id="seed-generate" value="Random"/><br>
 	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
 	<br>
 	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
+	<h5 style="display: inline; margin-left: 24px;">Can cause minor graphical issues, such as Robotnik's/Bosses' projectiles and missing animal/capsule sprites.</h5><br>
 	<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
+	<input type="checkbox" id="randomize-enemies-input"/>&nbspRandomize Enemies<br>
+	<h5 style="display: inline; margin-left: 24px;">Enemy sprites will be corrupted if an enemy sprites do not exist in level sprite set.</h5><br>
+	<input type="checkbox" id="shuffle-bosses-input" hidden disabled/><!--&nbspShuffle Bosses<br>-->
+	<input type="checkbox" id="randomize-monitors-input"/>&nbspRandomize Monitors<br>
 	<input type="checkbox" id="shuffle-sfx-input"/>&nbspShuffle Sound Effects<br>
 	<input type="checkbox" id="shuffle-music-input"/>&nbspShuffle Music<br>
-	<input type="checkbox" id="shuffle-palettes-input" unchecked hidden/><!--&nbspShuffle Palettes (<b><i><u>WARNING: EPILEPSY INDUCING!</u></i></b>)<br>-->
-	<input type="checkbox" id="shuffle-palette-pointers-input" unchecked hidden/><!--&nbspShuffle Palette Pointers (<b><i><u>WARNING: EPILEPSY INDUCING!</u></i></b>)<br>-->
-	<input type="checkbox" id="shuffle-palette-colors-input" unchecked/>&nbspShuffle Palette Colors (<b><i><u>WARNING: EPILEPSY INDUCING!</u></i></b>)<br>
+	<input type="checkbox" id="shuffle-palette-colors-input" unchecked/>&nbspShuffle Palette Colors <b><i><u>(WARNING: EPILEPSY INDUCING!)</u></i></b><br>
 	<br>
 	<input type="button" id="randomize-rom" value="Generate"/><br>
+	<br><hr>
 	<div style="display: inline;"><br>Thanks to <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog">RomHacking.net</a> for the data they <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog:ROM_map">display</a> from the external links.</div>
+	<div style="display: inline;"><br>Extra thanks to <a href="http://info.sonicretro.org/SCHG:Sonic_the_Hedgehog_(8-bit)">SonicRetro.org</a> for making sense of the data.</div>
 </body>
 
 <script src="ui.js"></script>
 <script>
-function onFileSelect(evt) {
-	var fileList = evt.target.files;
-
-	if (fileList.length > 0) {
-		ui.selectedFileOutput = fileList[0].name;
-		var lastDot = ui.selectedFileOutput.lastIndexOf('.');
-		if (lastDot !== -1) {
-			ui.selectedFileExtOutput = ui.selectedFileOutput.slice(lastDot, ui.selectedFileOutput.length);
-			ui.selectedFileNameOutput = ui.selectedFileOutput.slice(0, lastDot);
-		}
-
-		var fr = new FileReader();
-        fr.onload = function() {
-        	rom.file = new Uint8Array(fr.result);
-        };
-        fr.readAsArrayBuffer(fileList[0]);
-	}
-}
-
-function onRandomSeed() {
-	//console.log("ui.seedInput: " + ui.seedInput);
-	ui.seedInput.value = getRandomInt(0x7FFFFFFF).toString(10);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
 	//console.log("DOM fully loaded and parsed");
 
