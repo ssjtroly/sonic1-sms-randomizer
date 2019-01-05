@@ -1,5 +1,7 @@
 <html>
-<head><title>Sonic the Hedgehog Randomizer</title>
+<head>
+<meta charset="utf-8" />
+<title>Sonic the Hedgehog Randomizer</title>
 <script src="seedrandom.min.js"></script>
 <script src="utility.js"></script>
 
@@ -30,19 +32,23 @@
 	Seed: <input type="text" id="seed-input" /><input type="button" id="seed-generate" value="Random"/><br>
 	<input type="file" id="file" accept=".sms" /><output id="selected-file"/><br>
 	<br>
-	<input type="checkbox" id="shuffle-levels-input" checked/>&nbspShuffle Levels<br>
+	<input type="checkbox" id="shuffle-level-order-check" checked/>Shuffle Level Order<br>
 	<h5 style="display: inline; margin-left: 24px;">Can cause minor graphical issues, such as Robotnik's/Bosses' projectiles and missing animal/capsule sprites.</h5><br>
-	<input type="checkbox" id="shuffle-bonus-input"/>&nbspShuffle Bonus Stages<br>
-	<input type="checkbox" id="randomize-enemies-input"/>&nbspRandomize Enemies<br>
-	<h5 style="display: inline; margin-left: 24px;">Enemy sprites will be corrupted if an enemy sprites do not exist in level sprite set.</h5><br>
-	<input type="checkbox" id="shuffle-bosses-input" hidden disabled/><!--&nbspShuffle Bosses<br>-->
-	<input type="checkbox" id="randomize-monitors-input"/>&nbspRandomize Monitors<br>
-	<input type="checkbox" id="shuffle-sfx-input"/>&nbspShuffle Sound Effects<br>
-	<input type="checkbox" id="shuffle-music-input"/>&nbspShuffle Music<br>
-	<input type="checkbox" id="shuffle-palette-colors-input" unchecked/>&nbspShuffle Palette Colors <b><i><u>(WARNING: EPILEPSY INDUCING!)</u></i></b><br>
+	<input type="checkbox" id="shuffle-level-acts-check" checked/>Shuffle Level Acts<br>
+	<h5 style="display: inline; margin-left: 24px;">Shuffles acts within a level except act 3, pretty useless as it is now.</h5><br>
+	<input type="checkbox" id="shuffle-bonus-check"/>Shuffle Bonus Stages<br>
+	<input type="checkbox" id="remove-autoscrollers-check"/>Remove Autoscrollers<br>
+	<input type="checkbox" id="randomize-enemies-check"/>Randomize Enemies<br>
+	<h5 style="display: inline; margin-left: 24px;">Enemy sprites will be corrupted if an enemy's sprites do not exist in level sprite set.</h5><br>
+	<input type="checkbox" id="shuffle-bosses-check" hidden disabled/><!--&nbspShuffle Bosses<br>-->
+	<input type="checkbox" id="randomize-monitors-check"/>Randomize Monitors<br>
+	<input type="checkbox" id="shuffle-sfx-check"/>Shuffle Sound Effects<br>
+	<input type="checkbox" id="shuffle-music-check"/>Shuffle Music<br>
+	<input type="checkbox" id="shuffle-palette-colors-check" disabled unchecked/>Shuffle Palette Colors (Randomize Playability)<br>
 	<br>
 	<input type="button" id="randomize-rom" value="Generate"/><br>
 	<br><hr>
+	<div style="display: inline;"><br>You can find the source for this randomizer more easily on <a href="https://github.com/ssjtroly/sonic1-sms-randomizer">Github</a>.</div>
 	<div style="display: inline;"><br>Thanks to <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog">RomHacking.net</a> for the data they <a href="https://datacrystal.romhacking.net/wiki/Sonic_the_Hedgehog:ROM_map">display</a> from the external links.</div>
 	<div style="display: inline;"><br>Extra thanks to <a href="http://info.sonicretro.org/SCHG:Sonic_the_Hedgehog_(8-bit)">SonicRetro.org</a> for making sense of the data.</div>
 </body>

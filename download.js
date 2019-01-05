@@ -16,7 +16,4 @@ var downloadBlob = function(data, fileName, mimeType) {
 	});
 	url = window.URL.createObjectURL(blob);
 	downloadURL(url, fileName);
-	//setTimeout(function() {
-	//	return window.URL.revokeObjectURL(url);
-	//}, 1000);
 };

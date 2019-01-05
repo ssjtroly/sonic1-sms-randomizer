@@ -186,7 +186,6 @@ var rom = {
 		0x1559E, 	// 15: Sky Base Act 1
 		0x155A0, 	// 16: Sky Base Act 2
 		0x155A2, 	// 17: Sky Base Act 3
-	],
 	/*
 		0x155A4, 	// 18: End Sequence
 		// 0x155A6,	// 19: UNUSED (invalid data)
@@ -207,8 +206,8 @@ var rom = {
 		0x155C4, 	// 34: Special Stage 7
 		0x155C6, 	// 35: Special Stage 8
 		// 0x155C8, 	// 36: UNUSED (invalid data)
-	],
 	*/
+	],
 
 	bonusHeaderPointers: [
 		0x155B8, 	// 28: Special Stage 1
@@ -220,27 +219,4 @@ var rom = {
 		0x155C4, 	// 34: Special Stage 7
 		0x155C6, 	// 35: Special Stage 8
 	],
-
-	ScrollingAndRingHUDFlags: {
-		Invalid: 0x01,			// Sonic immediately dies, the game hangs and doesn't reload the level; purpose unknown
-		DemoPlay: 0x02, 		// The demo play data controls Sonic
-		ShowRings: 0x04, 		// Shows ring count in HUD and rings are displayed. When this value is not included no rings are visible, 
-						 		//     even though the sparkle effect occurs when you collect them
-		AutoRightScroll: 0x08,  // The level automatically scrolls to the right (ala Bridge Act 2)
-		PauseUpScroll: 0x10, 	// After a pause, the level automatically scrolls upwards! If you get caught at the bottom of the screen, you die
-		SmoothScroll: 0x20, 	// The screen scrolls smoothly, allowing you to get ahead of it
-		OscilateScroll: 0x40, 	// Slow up and down wave effect (ala Sky Base Act 2)
-		NoDownScroll: 0x80, 	// Screen does not scroll down (ala Jungle Act 2). If you get caught at the bottom of the screen, you die
-	},
-
-	TimeHUDAndLightning: {
-		SpecialStage: 0x01, 	 // Centers the time display when on a special stage. Outside of the special stage causes the game to switch to the special stage
-	    LightningEffect: 0x02, 	 // Uses the lightning effect. This overrides the level's own palette
-	    Unknown1: 0x04, 		 // No effect?
-	    Unknown2: 0x08, 		 // No effect?
-	    UnderwaterPalette: 0x10, // Use the boss underwater palette (ala Labyrinth Act 3)
-	    DisplayTime: 0x20, 		 // Displays the time
-	    LockScroll: 0x40, 		 // Locks the screen, no scrolling occurs
-	    Unknown3: 0x80 			 // No effect?
-	},
 }

@@ -2,16 +2,21 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
 }
 
-function littleBytesToBigEndian(byte1, byte2) {
-	return byte1 | (byte2 << 8);
+function littleToBigEndian(byte1, byte2) {
+	return (byte2 << 8) | byte1;
 }
 
-function bigToLittleBytesEndian(num) {
-	return [ num & 0x0F, num & 0xF0 ];
+function bigToLittleEndian(num) {
+	var top = num & 0xFF;
+	var bottom = (num & 0xFF00) >>> 8;
+
+	return [ top, bottom ];
 }
 
 function eraseArrayElement(arr, index) {
-	var first = arr.slice(0, index);
-	var second = arr.slice(index+1);
-	arr = first.concat(second);
+	//var first = arr.slice(0, index);
+	//var second = arr.slice(index+1);
+	//arr = first.concat(second);
+
+	arr.splice(index);
 }

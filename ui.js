@@ -27,8 +27,10 @@ var ui = {
 	seedRandomButton: null,
 	fileInput: null,
 	randomizeButton: null,
-	shuffleLevelsCheck: null,
+	shuffleLevelOrderCheck: null,
+	shuffleLevelActsCheck: null,
 	shuffleBonusCheck: null,
+	removeAutoscrollersCheck: null,
 	randomizeEnemiesCheck: null,
 	shuffleBossesCheck: null,
 	randomizeMonitorsCheck: null,
@@ -39,7 +41,7 @@ var ui = {
 	minorVersionDiv: null,
 
 	majorVersion: "0",
-	minorVersion: "002",
+	minorVersion: "003",
 
 	selectedFileNameOutput: "",
 	selectedFileExtOutput: "",
@@ -49,13 +51,15 @@ var ui = {
 		this.minorVersionDiv = document.getElementById("minor-version");
 		this.seedInput = document.getElementById("seed-input");
 		this.selectedFileOutput = document.getElementById("selected-file");
-		this.shuffleLevelsCheck = document.getElementById("shuffle-levels-input");
-		this.shuffleBonusCheck = document.getElementById("shuffle-bonus-input");
-		this.randomizeEnemiesCheck = document.getElementById("randomize-enemies-input");
-		this.randomizeMonitorsCheck = document.getElementById("randomize-monitors-input");
-		this.shuffleSfxCheck = document.getElementById("shuffle-sfx-input");
-		this.shuffleMusicCheck = document.getElementById("shuffle-music-input");
-		this.shufflePaletteColorsCheck = document.getElementById("shuffle-palette-colors-input");
+		this.shuffleLevelOrderCheck = document.getElementById("shuffle-level-order-check");
+		this.shuffleLevelActsCheck = document.getElementById("shuffle-level-acts-check");
+		this.shuffleBonusCheck = document.getElementById("shuffle-bonus-check");
+		this.removeAutoscrollersCheck = document.getElementById("remove-autoscrollers-check");
+		this.randomizeEnemiesCheck = document.getElementById("randomize-enemies-check");
+		this.randomizeMonitorsCheck = document.getElementById("randomize-monitors-check");
+		this.shuffleSfxCheck = document.getElementById("shuffle-sfx-check");
+		this.shuffleMusicCheck = document.getElementById("shuffle-music-check");
+		this.shufflePaletteColorsCheck = document.getElementById("shuffle-palette-colors-check");
 		this.seedRandomButton = document.getElementById("seed-generate");
 		this.fileInput = document.getElementById("file");
 		this.randomizeButton = document.getElementById("randomize-rom");
