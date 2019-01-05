@@ -256,12 +256,12 @@ var randomizer = {
 
 		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
 			var levelHeaderAddress = getLevelHeaderAddress(rom.file, rom.levelHeaderPointers[i]);
-			var music = rom.file[levelHeaderAddress+levelHeaderFieldOffset.music];
+			var music = rom.file[levelHeaderAddress+LevelHeaderFieldOffset.music];
 			//console.log("level " + i + " music: " + music);
 			if (musicPool.includes(music)) {
 				var newMusicIndex = getRandomInt(musicPool.length);
 				var newMusic = musicPool[newMusicIndex];
-				ROM[levelHeaderAddress+levelHeaderFieldOffset.music] = newMusic;
+				ROM[levelHeaderAddress+LevelHeaderFieldOffset.music] = newMusic;
 
 				eraseArrayElement(musicPool, newMusicIndex);
 				//console.log("    new music: " + newMusic);
