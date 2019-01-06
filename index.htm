@@ -1,16 +1,15 @@
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Sonic the Hedgehog Randomizer</title>
-<script src="seedrandom.min.js"></script>
-<script src="utility.js"></script>
+	<meta charset="utf-8" />
+	<title>Sonic the Hedgehog Randomizer</title>
+	<script src="seedrandom.min.js"></script>
+	<script src="utility.js"></script>
 
-<script src="rom.js"></script>
-<script src="levelheader.js"></script>
-<script src="objectlayout.js"></script>
-<script src="randomizer.js"></script>
-<script src="download.js"></script>
-
+	<script src="rom.js"></script>
+	<script src="levelheader.js"></script>
+	<script src="objectlayout.js"></script>
+	<script src="randomizer.js"></script>
+	<script src="download.js"></script>
 </head>
 <body>
 	<h1 style="display: inline;"><u>Sonic the Hedgehog Randomizer v<div id="major-version" style="display:inline"></div>.<div id="minor-version" style="display:inline"></div></u></h1><br>
@@ -40,11 +39,15 @@
 	<input type="checkbox" id="remove-autoscrollers-check"/>Remove Autoscrollers<br>
 	<input type="checkbox" id="randomize-enemies-check"/>Randomize Enemies<br>
 	<h5 style="display: inline; margin-left: 24px;">Enemy sprites will be corrupted if an enemy's sprites do not exist in level sprite set.</h5><br>
-	<input type="checkbox" id="shuffle-bosses-check" hidden disabled/><!--&nbspShuffle Bosses<br>-->
+	<input type="checkbox" id="shuffle-bosses-check" hidden disabled/><!--Shuffle Bosses<br>-->
 	<input type="checkbox" id="randomize-monitors-check"/>Randomize Monitors<br>
 	<input type="checkbox" id="shuffle-sfx-check"/>Shuffle Sound Effects<br>
 	<input type="checkbox" id="shuffle-music-check"/>Shuffle Music<br>
-	<input type="checkbox" id="shuffle-palette-colors-check" disabled unchecked/>Shuffle Palette Colors (Randomize Playability)<br>
+	<input type="checkbox" id="randomize-sonic-colors-check" hidden disabled/><!--Randomize Sonic's Colors<br>
+	<h5 style="display: inline; margin-left: 24px;">This will effect some other colors too.</h5><br>-->
+	<input type="checkbox" id="randomize-palettes-check" />Randomize Palettes<br>
+	<h5 style="display: inline; margin-left: 24px;">This will disable palette cycle speed to prevent flashing colors, this will also ruin some background animations.</h5><br>
+	<input type="checkbox" id="randomize-palette-colors-check" hidden disabled/><!--Randomize Palette Colors (Randomize Playability)<br>-->
 	<br>
 	<input type="button" id="randomize-rom" value="Generate"/><br>
 	<br><hr>
@@ -56,8 +59,6 @@
 <script src="ui.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-	//console.log("DOM fully loaded and parsed");
-
 	// initialize ui
 	ui.initialize();
 

@@ -81,17 +81,8 @@ var rom = {
 	],
 */
 
+	musicDataPointers: 0x0C716, // 42 bytes
 	musicPointers: [
-		//0x00D3D, // Main Map Music
-		//0x012D9, // Title Screen Music
-		//0x02709, // Credits Music
-		//0x03641, // Death Music
-		//0x05042, // Death Drowned Music
-		//0x05D24, // Invincibility Music
-		//0x05EDC, // Chaos Emerald Gained Music
-		//0x05FCF, // Level Completed (post) Music
-		//0x07045, // Green Hill Boss Music
-		//0x07487, // Level Completed (machine) music
 		0x08088, // Jungle Boss Music
 		0x084D4, // Bridge Boss Music
 		0x092A9, // Labyrinth Boss Music
@@ -99,7 +90,18 @@ var rom = {
 		0x0B68D, // Sky Base Boss Music
 	],
 
-	musicDataPointers: 0x0C716, // 42 bytes
+	jinglePointers: [
+		0x00D3D, // Main Map Music
+		0x012D9, // Title Screen Music
+		0x02709, // Credits Music
+		0x03641, // Death Music
+		0x05042, // Death Drowned Music
+		0x05D24, // Invincibility Music
+		0x05EDC, // Chaos Emerald Gained Music
+		0x05FCF, // Level Completed (post) Music
+		0x07045, // Green Hill Boss Music
+		0x07487, // Level Completed (machine) music
+	],
 
 	sfxPointers: [
 		//0x014C1, // continue
@@ -197,14 +199,6 @@ var rom = {
 		0x155B2, 	// 25: Scrap Brain Act 2, from Ballhog Area
 		0x155B4, 	// 26: Sky Base Act 2 (Interior)
 		0x155B6, 	// 27: Sky Base Act 2 (Interior), this one is identical
-		0x155B8, 	// 28: Special Stage 1
-		0x155BA,	// 29: Special Stage 2
-		0x155BC, 	// 30: Special Stage 3
-		0x155BE, 	// 31: Special Stage 4
-		0x155C0, 	// 32: Special Stage 5
-		0x155C2, 	// 33: Special Stage 6
-		0x155C4, 	// 34: Special Stage 7
-		0x155C6, 	// 35: Special Stage 8
 		// 0x155C8, 	// 36: UNUSED (invalid data)
 	*/
 	],

@@ -18,7 +18,9 @@ var randomizer = {
 		var isRandomizeMonitorsChecked = ui.randomizeMonitorsCheck.checked;
 		var isShuffleSfxChecked = ui.shuffleSfxCheck.checked;
 		var isShuffleMusicChecked = ui.shuffleMusicCheck.checked;
-		var isShufflePaletteColorsChecked = ui.shufflePaletteColorsCheck.checked;
+		var isRandomizeSonicsColorsChecked = ui.randomizeSonicsColorsCheck.checked;
+		var isRandomizePalettesChecked = ui.randomizePalettesCheck.checked;
+		var isRandomizePaletteColorsChecked = ui.randomizePaletteColorsCheck.checked;
 
 		if (!isShuffleLevelOrderChecked && 
 			!isShuffleLevelActsChecked &&
@@ -28,7 +30,9 @@ var randomizer = {
 			!isRandomizeMonitorsChecked &&
 			!isShuffleSfxChecked && 
 			!isShuffleMusicChecked &&
-			!isShufflePaletteColorsChecked) 
+			!isRandomizeSonicsColorsChecked &&
+			!isRandomizePalettesChecked &&
+			!isRandomizePaletteColorsChecked) 
 		{
 			alert("Nothing to randomize.");
 			return;
@@ -74,8 +78,16 @@ var randomizer = {
 			randomizer.shuffleMusic(ROM);
 		}
 
-		if (isShufflePaletteColorsChecked) {
-			randomizer.shufflePaletteColors(ROM);
+		if (isRandomizeSonicsColorsChecked) {
+			randomizer.randomizeSonicsColors(ROM);
+		}
+
+		if (isRandomizePalettesChecked) {
+			randomizer.randomizePalettes(ROM);
+		}
+
+		if (isRandomizePaletteColorsChecked) {
+			randomizer.randomizePaletteColors(ROM);
 		}
 
 	///*
@@ -94,7 +106,7 @@ var randomizer = {
 		var levelHeaderPointers = rom.levelHeaderPointers;
 
 		var levelHeaderPointerPool = [];
-		for (var i = 0; i < levelHeaderPointers.length; i+=3) {
+		for (let i = 0; i < levelHeaderPointers.length; i+=3) {
 			// copy every 3rd level header pointer
 			var lhPtr = levelHeaderPointers[i];
 			levelHeaderPointerPool.push(lhPtr);
@@ -159,7 +171,7 @@ var randomizer = {
 
 	removeAutoscrollers: function(ROM) {
 		var levelHeaderPointers = rom.levelHeaderPointers;
-		for (var i = 0; i < levelHeaderPointers.length; i+=3) {
+		for (let i = 0; i < levelHeaderPointers.length; i+=3) {
 			//console.log("level " + (Math.floor(i/3)+1));
 
 			var act1LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i]);
@@ -181,12 +193,12 @@ var randomizer = {
 	},
 
 	randomizeEnemies: function(ROM) {
-		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
+		for (let i = 0; i < rom.levelHeaderPointers.length; i++) {
 			var headerObject = new LevelHeader(ROM, getLevelHeaderAddress(rom.file, rom.levelHeaderPointers[i]));
 			var objectLayoutAddress = getObjectLayoutAddress(headerObject.objectLayout);
 			var objectCount = rom.file[objectLayoutAddress];
 
-			for (var j = 0; j < objectCount; j++) {
+			for (let j = 0; j < objectCount; j++) {
 				var offset = 1+(j*3); // 1 byte offset for count plus 3 bytes for each object entry
 
 				var objectIndex = rom.file[objectLayoutAddress+offset];
@@ -202,13 +214,13 @@ var randomizer = {
 	},
 
 	randomizeMonitors: function(ROM) {
-		for (var i = 0; i < rom.levelHeaderPointers.length; i++) {
+		for (let i = 0; i < rom.levelHeaderPointers.length; i++) {
 			var lhAddr = getLevelHeaderAddress(ROM, rom.levelHeaderPointers[i]);
 			var levelHeader = new LevelHeader(ROM, lhAddr);
 			var olAddr = getObjectLayoutAddress(levelHeader.objectLayout);
 			var objectCount = rom.file[olAddr];
 
-			for (var j = 0; j < objectCount; j++) {
+			for (let j = 0; j < objectCount; j++) {
 				var offset = 1+(j*3); // 1 byte offset for count plus 3 bytes for each object entry
 
 				var objectIndex = rom.file[olAddr+offset];
@@ -226,16 +238,25 @@ var randomizer = {
 		var sfxPointerPool = rom.sfxPointers.slice(0);
 		var sfxPointers = rom.sfxPointers;
 
-		for (var i = 0; i < sfxPointers.length; i++) {
+		for (let i = 0; i < sfxPointers.length; i++) {
 			var poolIndex = getRandomInt(sfxPointerPool.length);
 
 			ROM[sfxPointers[i]] = rom.file[sfxPointerPool[poolIndex]];
 			ROM[sfxPointers[i]+1] = rom.file[sfxPointerPool[poolIndex]+1];
 
-			eraseArrayElement(sfxPointerPool, poolIndex);
-			//var first = sfxPointerPool.slice(0, poolIndex);
-			//var second = sfxPointerPool.slice(poolIndex+1);
-			//sfxPointerPool = first.concat(second);
+			sfxPointerPool.splice(poolIndex, 1);
+		}
+
+		var jinglePointersPool = rom.jinglePointers.slice(0);
+		var jinglePointers = rom.jinglePointers;
+
+		for (let i = 0; i < jinglePointers.length; i++) {
+			var poolIndex = getRandomInt(jinglePointersPool.length);
+
+			ROM[jinglePointers[i]] = rom.file[jinglePointersPool[poolIndex]];
+			ROM[jinglePointers[i]+1] = rom.file[jinglePointersPool[poolIndex]+1];
+
+			jinglePointersPool.splice(poolIndex, 1);
 		}
 	},
 
@@ -269,7 +290,97 @@ var randomizer = {
 		}
 	},
 
-	shufflePaletteColors: function(ROM) {
+	randomizePalettes: function(ROM) {
+		var levelHeaderPointers = rom.levelHeaderPointers;
+
+		for (let i = 0; i < levelHeaderPointers.length; i+=3) {
+			//console.log("level " + (Math.floor(i/3)+1));
+
+			var act1LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i]);
+			var act2LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i+1]);
+			var act3LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i+2]);
+
+			var act1Header = new LevelHeader(ROM, act1LHAddr);
+			var act2Header = new LevelHeader(ROM, act2LHAddr);
+			var act3Header = new LevelHeader(ROM, act3LHAddr);
+
+			act1Header.initialPalette = getRandomInt(8);
+			act1Header.cycleSpeed = 0;
+			act1Header.colorCycles = 0;
+			act1Header.cyclePalette = act1Header.initialPalette;
+
+			act2Header.initialPalette = getRandomInt(8);
+			act2Header.cycleSpeed = 0;
+			act2Header.colorCycles = 0;
+			act2Header.cyclePalette = act2Header.initialPalette;
+
+			act3Header.initialPalette = getRandomInt(8);
+			act3Header.cycleSpeed = 0;
+			act3Header.colorCycles = 0;
+			act3Header.cyclePalette = act3Header.initialPalette;
+
+			act1Header.write(ROM, act1LHAddr);
+			act2Header.write(ROM, act2LHAddr);
+			act3Header.write(ROM, act3LHAddr);
+		}
+	},
+
+	randomizeSonicsColors: function(ROM) {
+		var palettePointers = rom.palettePointers;
+
+		var sonicColor3 = getRandomInt(0x3F);
+		var sonicColor2 = getRandomInt(0x3F);
+		var sonicColor1 = getRandomInt(0x3F);
+
+		//var sonicColor1 = sonicColorBase + ((getRandomInt(2) == 0) ? 0 : 8) + ((getRandomInt(2) == 0) ? 0 : 16);
+		//var sonicColor2 = sonicColorBase + ((getRandomInt(2) == 0) ? 16 : 24) + ((getRandomInt(2) == 0) ? 0 : 16);
+
+		// 16 - sonic shadow
+		// 18 - sonic highligh
+		// 19 - sonic patches
+
+		for (var i = 0; i < palettePointers.length; i++) {
+			var paletteAddr = palettePointers[i][0];
+			ROM[paletteAddr+16] = sonicColor1;
+			ROM[paletteAddr+17] = sonicColor2;
+			ROM[paletteAddr+18] = sonicColor3;
+		}
+
+		var levelHeaderPointers = rom.levelHeaderPointers;
+
+		for (let i = 0; i < levelHeaderPointers.length; i+=3) {
+			//console.log("level " + (Math.floor(i/3)+1));
+
+			var act1LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i]);
+			var act2LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i+1]);
+			var act3LHAddr = getLevelHeaderAddress(ROM, levelHeaderPointers[i+2]);
+
+			var act1Header = new LevelHeader(ROM, act1LHAddr);
+			var act2Header = new LevelHeader(ROM, act2LHAddr);
+			var act3Header = new LevelHeader(ROM, act3LHAddr);
+
+			//act1Header.initialPalette = getRandomInt(8);
+			//act1Header.cycleSpeed = 0;
+			act1Header.colorCycles = 0;
+			//act1Header.cyclePalette = act1Header.initialPalette;
+
+			//act2Header.initialPalette = getRandomInt(8);
+			//act2Header.cycleSpeed = 0;
+			act2Header.colorCycles = 0;
+			//act2Header.cyclePalette = act2Header.initialPalette;
+
+			//act3Header.initialPalette = getRandomInt(8);
+			//act3Header.cycleSpeed = 0;
+			act3Header.colorCycles = 0;
+			//act3Header.cyclePalette = act3Header.initialPalette;
+
+			act1Header.write(ROM, act1LHAddr);
+			act2Header.write(ROM, act2LHAddr);
+			act3Header.write(ROM, act3LHAddr);
+		}
+	},
+
+	randomizePaletteColors: function(ROM) {
 		var palettePointers = rom.palettePointers;
 
 		for (var i = 0; i < palettePointers.length; i++) {

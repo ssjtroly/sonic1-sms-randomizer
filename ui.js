@@ -36,12 +36,14 @@ var ui = {
 	randomizeMonitorsCheck: null,
 	shuffleSfxCheck: null,
 	shuffleMusicCheck: null,
-	shufflePaletteColorsCheck: null,
+	randomizeSonicsColorsCheck: null,
+	randomizePalettesCheck: null,
+	randomizePaletteColorsCheck: null,
 	majorVersionDiv: null,
 	minorVersionDiv: null,
 
 	majorVersion: "0",
-	minorVersion: "003",
+	minorVersion: "004",
 
 	selectedFileNameOutput: "",
 	selectedFileExtOutput: "",
@@ -59,7 +61,9 @@ var ui = {
 		this.randomizeMonitorsCheck = document.getElementById("randomize-monitors-check");
 		this.shuffleSfxCheck = document.getElementById("shuffle-sfx-check");
 		this.shuffleMusicCheck = document.getElementById("shuffle-music-check");
-		this.shufflePaletteColorsCheck = document.getElementById("shuffle-palette-colors-check");
+		this.randomizeSonicsColorsCheck = document.getElementById("randomize-sonic-colors-check");
+		this.randomizePalettesCheck = document.getElementById("randomize-palettes-check");
+		this.randomizePaletteColorsCheck = document.getElementById("randomize-palette-colors-check");
 		this.seedRandomButton = document.getElementById("seed-generate");
 		this.fileInput = document.getElementById("file");
 		this.randomizeButton = document.getElementById("randomize-rom");
