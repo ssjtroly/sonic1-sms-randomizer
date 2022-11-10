@@ -39,6 +39,7 @@ var ui = {
 	randomizeSonicsColorsCheck: null,
 	randomizePalettesCheck: null,
 	randomizePaletteColorsCheck: null,
+	enableInfiniteLivesCheck: null,
 	majorVersionDiv: null,
 	minorVersionDiv: null,
 
@@ -64,6 +65,7 @@ var ui = {
 		this.randomizeSonicsColorsCheck = document.getElementById("randomize-sonic-colors-check");
 		this.randomizePalettesCheck = document.getElementById("randomize-palettes-check");
 		this.randomizePaletteColorsCheck = document.getElementById("randomize-palette-colors-check");
+		this.enableInfiniteLivesCheck = document.getElementById("enable-infinite-lives-check");
 		this.seedRandomButton = document.getElementById("seed-generate");
 		this.fileInput = document.getElementById("file");
 		this.randomizeButton = document.getElementById("randomize-rom");
