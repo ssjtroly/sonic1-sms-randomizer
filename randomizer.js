@@ -21,6 +21,7 @@ var randomizer = {
 		var isRandomizeSonicsColorsChecked = ui.randomizeSonicsColorsCheck.checked;
 		var isRandomizePalettesChecked = ui.randomizePalettesCheck.checked;
 		var isRandomizePaletteColorsChecked = ui.randomizePaletteColorsCheck.checked;
+		var isEnableInfiniteLivesChecked = ui.enableInfiniteLivesCheck.checked;
 
 		if (!isShuffleLevelOrderChecked && 
 			!isShuffleLevelActsChecked &&
@@ -32,7 +33,8 @@ var randomizer = {
 			!isShuffleMusicChecked &&
 			!isRandomizeSonicsColorsChecked &&
 			!isRandomizePalettesChecked &&
-			!isRandomizePaletteColorsChecked) 
+			!isRandomizePaletteColorsChecked &&
+			!isEnableInfiniteLivesChecked) 
 		{
 			alert("Nothing to randomize.");
 			return;
@@ -88,6 +90,10 @@ var randomizer = {
 
 		if (isRandomizePaletteColorsChecked) {
 			randomizer.randomizePaletteColors(ROM);
+		}
+
+		if (isEnableInfiniteLivesChecked) {
+			randomizer.enableInfiniteLives(ROM);
 		}
 
 	///*
@@ -413,5 +419,9 @@ var randomizer = {
 				ROM[paletteAddr+j] = newc;
 			}
 		}
+	},
+
+	enableInfiniteLives: function(ROM) {
+		ROM[rom.infiniteLivesInstruction] = 0x00;
 	},
 }

@@ -1,6 +1,8 @@
 var rom = {
 	file: null,
 
+	infiniteLivesInstruction: 0x5464,
+
 	levelHeaderPointerBegin: 0x15580,
 
 	badnikIDs: [
